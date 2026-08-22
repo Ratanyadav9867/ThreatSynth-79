@@ -1,0 +1,23 @@
+{
+  "alert_id": "ALT-DEMO-003",
+  "timestamp": "2026-08-22T10:47:15.190898+00:00",
+  "alert_name": "Authentication Brute Force Password Spray",
+  "source_ip": "185.220.101.203",
+  "source_country": "DE",
+  "is_tor": false,
+  "username": "john.doe@fintech.io",
+  "resource": "/api/v2/auth/oauth/token",
+  "status_code": 401,
+  "attack_type": "BRUTE_FORCE",
+  "failed_login_count": 21,
+  "request_rate_per_sec": 30.0,
+  "payload": "{\"username\": \"john.doe\", \"password\": \"password123\"}",
+  "outbound_bytes_mb": 0.05,
+  "impossible_travel_speed_kmh": 0.0,
+  "port_scan_distinct_ports": 0,
+  "privilege_escalation": false,
+  "hour_of_day": 19,
+  "sensitive_payload": "FAILED_ATTEMPTS=18; USER_AGENT=Hydra/9.2",
+  "classification": "Medium",
+  "ground_truth_risk": "Medium"
+}

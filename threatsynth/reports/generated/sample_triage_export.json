@@ -1,0 +1,1483 @@
+{
+  "export_metadata": {
+    "system": "ThreatSynth 79",
+    "exported_at": "2026-08-22T11:00:37.223901+00:00",
+    "operator": "soc_analyst",
+    "role": "soc_analyst",
+    "total_alerts": 6
+  },
+  "alerts": [
+    {
+      "alert_id": "ALT-DRILL-001",
+      "timestamp": "2026-08-22T11:00:36.693039+00:00",
+      "alert_name": "Critical SQL Injection Attempt on Core Payment API",
+      "source_ip": "198.51.100.115",
+      "source_country": "IR",
+      "is_tor": true,
+      "username": "admin",
+      "resource": "/api/v1/payments/transfer",
+      "status_code": 500,
+      "attack_type": "SQL_INJECTION",
+      "failed_login_count": 0,
+      "request_rate_per_sec": 45.0,
+      "payload": "'; DROP TABLE audit_log; --",
+      "outbound_bytes_mb": 14.5,
+      "impossible_travel_speed_kmh": 0.0,
+      "port_scan_distinct_ports": 0,
+      "privilege_escalation": true,
+      "hour_of_day": 3,
+      "sensitive_payload": "SELECT * FROM cardholder_vault WHERE token='NULL' OR 1=1; -- EXFILTRATE",
+      "classification": "High",
+      "ground_truth_risk": "High",
+      "risk_level": "High",
+      "confidence": 1.0,
+      "anomaly_score": 0.4796,
+      "probabilities": {
+        "High": 1.0,
+        "Low": 0.0,
+        "Medium": 0.0
+      },
+      "extracted_features": {
+        "failed_login": 0.0,
+        "req_rate": 45.0,
+        "payload_entropy": 4.3104,
+        "is_admin": true,
+        "speed_kmh": 0.0,
+        "ports": 0.0,
+        "outbound_mb": 14.5,
+        "has_sqli": true,
+        "priv_escalation": true,
+        "geo_risk": 1.0
+      },
+      "explainability": {
+        "predicted_risk": "High",
+        "confidence": 1.0,
+        "probabilities": {
+          "High": 1.0,
+          "Low": 0.0,
+          "Medium": 0.0
+        },
+        "explanation_summary": "Classified as HIGH RISK primarily driven by Request Rate Per Sec, Error Status Rate. Requires immediate SOC containment.",
+        "top_risk_drivers": [
+          {
+            "feature": "request_rate_per_sec",
+            "display_name": "Request Rate Per Sec",
+            "value": 45.0,
+            "importance_weight": 0.2163,
+            "contribution_score": 0.1903,
+            "impact": "INCREASES_RISK",
+            "explanation": "Burst request velocity against API endpoints: observed value = 45.0"
+          },
+          {
+            "feature": "error_status_rate",
+            "display_name": "Error Status Rate",
+            "value": 1.0,
+            "importance_weight": 0.1265,
+            "contribution_score": 0.1265,
+            "impact": "INCREASES_RISK",
+            "explanation": "Frequency of HTTP 4xx/5xx security and server errors: observed value = 1.0"
+          },
+          {
+            "feature": "off_hours_activity",
+            "display_name": "Off Hours Activity",
+            "value": 1.0,
+            "importance_weight": 0.1183,
+            "contribution_score": 0.1183,
+            "impact": "INCREASES_RISK",
+            "explanation": "Operations triggered outside normal business hours: observed value = 1.0"
+          },
+          {
+            "feature": "geo_risk_weight",
+            "display_name": "Geo Risk Weight",
+            "value": 1.0,
+            "importance_weight": 0.1096,
+            "contribution_score": 0.1096,
+            "impact": "INCREASES_RISK",
+            "explanation": "Geopolitical risk or anonymizing proxy/TOR node usage: observed value = 1.0"
+          }
+        ],
+        "mitigating_factors": [
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 0.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Number of consecutive failed authentication attempts: observed value = 0.0"
+          }
+        ],
+        "all_factors": [
+          {
+            "feature": "request_rate_per_sec",
+            "display_name": "Request Rate Per Sec",
+            "value": 45.0,
+            "importance_weight": 0.2163,
+            "contribution_score": 0.1903,
+            "impact": "INCREASES_RISK",
+            "explanation": "Burst request velocity against API endpoints: observed value = 45.0"
+          },
+          {
+            "feature": "error_status_rate",
+            "display_name": "Error Status Rate",
+            "value": 1.0,
+            "importance_weight": 0.1265,
+            "contribution_score": 0.1265,
+            "impact": "INCREASES_RISK",
+            "explanation": "Frequency of HTTP 4xx/5xx security and server errors: observed value = 1.0"
+          },
+          {
+            "feature": "off_hours_activity",
+            "display_name": "Off Hours Activity",
+            "value": 1.0,
+            "importance_weight": 0.1183,
+            "contribution_score": 0.1183,
+            "impact": "INCREASES_RISK",
+            "explanation": "Operations triggered outside normal business hours: observed value = 1.0"
+          },
+          {
+            "feature": "geo_risk_weight",
+            "display_name": "Geo Risk Weight",
+            "value": 1.0,
+            "importance_weight": 0.1096,
+            "contribution_score": 0.1096,
+            "impact": "INCREASES_RISK",
+            "explanation": "Geopolitical risk or anonymizing proxy/TOR node usage: observed value = 1.0"
+          },
+          {
+            "feature": "privilege_escalation_signal",
+            "display_name": "Privilege Escalation Signal",
+            "value": 1.0,
+            "importance_weight": 0.0953,
+            "contribution_score": 0.0953,
+            "impact": "INCREASES_RISK",
+            "explanation": "System commands or tokens attempting kernel/root privilege escalation: observed value = 1.0"
+          },
+          {
+            "feature": "is_admin_targeted",
+            "display_name": "Is Admin Targeted",
+            "value": 1.0,
+            "importance_weight": 0.0738,
+            "contribution_score": 0.0738,
+            "impact": "INCREASES_RISK",
+            "explanation": "Target resource/account belongs to administrative tier"
+          },
+          {
+            "feature": "outbound_bytes_mb",
+            "display_name": "Outbound Bytes Mb",
+            "value": 14.5,
+            "importance_weight": 0.1019,
+            "contribution_score": 0.0285,
+            "impact": "INCREASES_RISK",
+            "explanation": "Massive abnormal outbound data spike (14.5 MB) indicative of exfiltration"
+          },
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 1.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0158,
+            "impact": "NEUTRAL",
+            "explanation": "Active SQL injection syntax patterns matched in request payload"
+          },
+          {
+            "feature": "payload_entropy",
+            "display_name": "Payload Entropy",
+            "value": 4.31,
+            "importance_weight": 0.0262,
+            "contribution_score": 0.0118,
+            "impact": "NEUTRAL",
+            "explanation": "Shannon randomness metric indicative of payload obfuscation or binary injection: observed value = 4.310400009155273"
+          },
+          {
+            "feature": "payload_length",
+            "display_name": "Payload Length",
+            "value": 27.0,
+            "importance_weight": 0.04,
+            "contribution_score": -0.0018,
+            "impact": "NEUTRAL",
+            "explanation": "Size of raw HTTP or query payload: observed value = 27.0"
+          },
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 0.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Number of consecutive failed authentication attempts: observed value = 0.0"
+          },
+          {
+            "feature": "impossible_travel_speed_kmh",
+            "display_name": "Impossible Travel Speed Kmh",
+            "value": 0.0,
+            "importance_weight": 0.0065,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Physical velocity required between consecutive geographic access events: observed value = 0.0"
+          },
+          {
+            "feature": "port_scan_distinct_ports",
+            "display_name": "Port Scan Distinct Ports",
+            "value": 0.0,
+            "importance_weight": 0.0218,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Breadth of reconnaissance targeting internal network ports: observed value = 0.0"
+          },
+          {
+            "feature": "known_attack_signature_match",
+            "display_name": "Known Attack Signature Match",
+            "value": 0.0,
+            "importance_weight": 0.0,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Exact match against known threat intelligence CVE/signature database: observed value = 0.0"
+          }
+        ],
+        "model_architecture": "Ensemble Random Forest Classifier + Isolation Forest Anomaly Detector"
+      },
+      "genai_brief": {
+        "executive_summary": "CRITICAL INCIDENT DETECTED: A high-severity security anomaly was triggered on /api/v1/payments/transfer by identity 'admin' from source 198.51.100.115. Telemetry indicates active Exploit Public-Facing Application (T1190) within the Exploitation stage. The attack vector exhibits strong markers of malicious intent with elevated anomaly confidence. Immediate defensive containment is strongly advised.",
+        "threat_actor_profile": "External Web Application Attacker / Database Enumerator",
+        "mitre_attack": {
+          "tactic": "Initial Access / Exploitation",
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "kill_chain_stage": "Exploitation"
+        },
+        "blast_radius_assessment": "High - Potential compromise of backend payment databases or privileged credentials.",
+        "action_priority": "P1 - CRITICAL (15-minute SLA)",
+        "remediation_playbook": [
+          "1. [CONTAINMENT] Isolate source entity 198.51.100.115 via edge firewall rule and revoke active JWT tokens for user 'admin'.",
+          "2. [FORENSICS] Capture memory dump and container snapshot of target resource '/api/v1/payments/transfer'.",
+          "3. [AUDIT] Check database access logs for queries matching payload signatures during the last 60 minutes.",
+          "4. [ERADICATION] Force global password & MFA reset for account 'admin'.",
+          "5. [NOTIFICATION] Escalate incident ticket to Lead Incident Commander and Legal/Compliance if PII was exposed."
+        ],
+        "synthesized_by": "ThreatSynth Gen-AI Reasoning Engine v1.0"
+      },
+      "correlation": {
+        "has_correlation": false,
+        "matched_rules": [],
+        "conflicts": [],
+        "correlated_alert_ids": [],
+        "incident_blast_radius_score": 20,
+        "correlation_summary": "Standalone individual event"
+      }
+    },
+    {
+      "alert_id": "ALT-DRILL-002",
+      "timestamp": "2026-08-22T11:00:36.693087+00:00",
+      "alert_name": "Impossible Travel Velocity & Executive Account Compromise",
+      "source_ip": "203.0.113.64",
+      "source_country": "SG",
+      "is_tor": false,
+      "username": "sarah.vance@fintech-shield.internal",
+      "resource": "/admin/accounts/manage",
+      "status_code": 200,
+      "attack_type": "IMPOSSIBLE_TRAVEL",
+      "failed_login_count": 1,
+      "request_rate_per_sec": 8.0,
+      "payload": "{\"action\": \"export_all_customer_financial_records\", \"override_mfa\": true}",
+      "outbound_bytes_mb": 28.2,
+      "impossible_travel_speed_kmh": 1250.0,
+      "port_scan_distinct_ports": 0,
+      "privilege_escalation": true,
+      "hour_of_day": 2,
+      "sensitive_payload": "SESSION_TOKEN=jwt.ey...; LOCATION_DELTA=London_to_Singapore_in_15_mins",
+      "classification": "High",
+      "ground_truth_risk": "High",
+      "risk_level": "High",
+      "confidence": 1.0,
+      "anomaly_score": 0.4787,
+      "probabilities": {
+        "High": 1.0,
+        "Low": 0.0,
+        "Medium": 0.0
+      },
+      "extracted_features": {
+        "failed_login": 1.0,
+        "req_rate": 8.0,
+        "payload_entropy": 4.33,
+        "is_admin": true,
+        "speed_kmh": 1250.0,
+        "ports": 0.0,
+        "outbound_mb": 28.2,
+        "has_sqli": false,
+        "priv_escalation": true,
+        "geo_risk": 0.5
+      },
+      "explainability": {
+        "predicted_risk": "High",
+        "confidence": 1.0,
+        "probabilities": {
+          "High": 1.0,
+          "Low": 0.0,
+          "Medium": 0.0
+        },
+        "explanation_summary": "Classified as HIGH RISK primarily driven by Off Hours Activity, Privilege Escalation Signal. Requires immediate SOC containment.",
+        "top_risk_drivers": [
+          {
+            "feature": "off_hours_activity",
+            "display_name": "Off Hours Activity",
+            "value": 1.0,
+            "importance_weight": 0.1183,
+            "contribution_score": 0.1183,
+            "impact": "INCREASES_RISK",
+            "explanation": "Operations triggered outside normal business hours: observed value = 1.0"
+          },
+          {
+            "feature": "privilege_escalation_signal",
+            "display_name": "Privilege Escalation Signal",
+            "value": 1.0,
+            "importance_weight": 0.0953,
+            "contribution_score": 0.0953,
+            "impact": "INCREASES_RISK",
+            "explanation": "System commands or tokens attempting kernel/root privilege escalation: observed value = 1.0"
+          },
+          {
+            "feature": "is_admin_targeted",
+            "display_name": "Is Admin Targeted",
+            "value": 1.0,
+            "importance_weight": 0.0738,
+            "contribution_score": 0.0738,
+            "impact": "INCREASES_RISK",
+            "explanation": "Target resource/account belongs to administrative tier"
+          },
+          {
+            "feature": "outbound_bytes_mb",
+            "display_name": "Outbound Bytes Mb",
+            "value": 28.2,
+            "importance_weight": 0.1019,
+            "contribution_score": 0.0564,
+            "impact": "INCREASES_RISK",
+            "explanation": "Massive abnormal outbound data spike (28.2 MB) indicative of exfiltration"
+          }
+        ],
+        "mitigating_factors": [
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          }
+        ],
+        "all_factors": [
+          {
+            "feature": "off_hours_activity",
+            "display_name": "Off Hours Activity",
+            "value": 1.0,
+            "importance_weight": 0.1183,
+            "contribution_score": 0.1183,
+            "impact": "INCREASES_RISK",
+            "explanation": "Operations triggered outside normal business hours: observed value = 1.0"
+          },
+          {
+            "feature": "privilege_escalation_signal",
+            "display_name": "Privilege Escalation Signal",
+            "value": 1.0,
+            "importance_weight": 0.0953,
+            "contribution_score": 0.0953,
+            "impact": "INCREASES_RISK",
+            "explanation": "System commands or tokens attempting kernel/root privilege escalation: observed value = 1.0"
+          },
+          {
+            "feature": "is_admin_targeted",
+            "display_name": "Is Admin Targeted",
+            "value": 1.0,
+            "importance_weight": 0.0738,
+            "contribution_score": 0.0738,
+            "impact": "INCREASES_RISK",
+            "explanation": "Target resource/account belongs to administrative tier"
+          },
+          {
+            "feature": "outbound_bytes_mb",
+            "display_name": "Outbound Bytes Mb",
+            "value": 28.2,
+            "importance_weight": 0.1019,
+            "contribution_score": 0.0564,
+            "impact": "INCREASES_RISK",
+            "explanation": "Massive abnormal outbound data spike (28.2 MB) indicative of exfiltration"
+          },
+          {
+            "feature": "geo_risk_weight",
+            "display_name": "Geo Risk Weight",
+            "value": 0.5,
+            "importance_weight": 0.1096,
+            "contribution_score": 0.0548,
+            "impact": "INCREASES_RISK",
+            "explanation": "Geopolitical risk or anonymizing proxy/TOR node usage: observed value = 0.5"
+          },
+          {
+            "feature": "request_rate_per_sec",
+            "display_name": "Request Rate Per Sec",
+            "value": 8.0,
+            "importance_weight": 0.2163,
+            "contribution_score": 0.0303,
+            "impact": "INCREASES_RISK",
+            "explanation": "Burst request velocity against API endpoints: observed value = 8.0"
+          },
+          {
+            "feature": "payload_entropy",
+            "display_name": "Payload Entropy",
+            "value": 4.33,
+            "importance_weight": 0.0262,
+            "contribution_score": 0.012,
+            "impact": "NEUTRAL",
+            "explanation": "Shannon randomness metric indicative of payload obfuscation or binary injection: observed value = 4.329999923706055"
+          },
+          {
+            "feature": "impossible_travel_speed_kmh",
+            "display_name": "Impossible Travel Speed Kmh",
+            "value": 1250.0,
+            "importance_weight": 0.0065,
+            "contribution_score": 0.0101,
+            "impact": "NEUTRAL",
+            "explanation": "Impossible Travel Velocity of 1250 km/h detected between consecutive logins (Physical impossibility)"
+          },
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 1.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.0096,
+            "impact": "NEUTRAL",
+            "explanation": "Number of consecutive failed authentication attempts: observed value = 1.0"
+          },
+          {
+            "feature": "payload_length",
+            "display_name": "Payload Length",
+            "value": 73.0,
+            "importance_weight": 0.04,
+            "contribution_score": 0.0018,
+            "impact": "NEUTRAL",
+            "explanation": "Size of raw HTTP or query payload: observed value = 73.0"
+          },
+          {
+            "feature": "port_scan_distinct_ports",
+            "display_name": "Port Scan Distinct Ports",
+            "value": 0.0,
+            "importance_weight": 0.0218,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Breadth of reconnaissance targeting internal network ports: observed value = 0.0"
+          },
+          {
+            "feature": "error_status_rate",
+            "display_name": "Error Status Rate",
+            "value": 0.0,
+            "importance_weight": 0.1265,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Frequency of HTTP 4xx/5xx security and server errors: observed value = 0.0"
+          },
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          },
+          {
+            "feature": "known_attack_signature_match",
+            "display_name": "Known Attack Signature Match",
+            "value": 0.0,
+            "importance_weight": 0.0,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Exact match against known threat intelligence CVE/signature database: observed value = 0.0"
+          }
+        ],
+        "model_architecture": "Ensemble Random Forest Classifier + Isolation Forest Anomaly Detector"
+      },
+      "genai_brief": {
+        "executive_summary": "CRITICAL INCIDENT DETECTED: A high-severity security anomaly was triggered on /admin/accounts/manage by identity 'sarah.vance@fintech-shield.internal' from source 203.0.113.64. Telemetry indicates active Valid Accounts: Cloud Accounts (T1078.004) within the Credential Abuse stage. The attack vector exhibits strong markers of malicious intent with elevated anomaly confidence. Immediate defensive containment is strongly advised.",
+        "threat_actor_profile": "Compromised Credentials / Session Token Hijacker",
+        "mitre_attack": {
+          "tactic": "Defense Evasion / Initial Access",
+          "technique_id": "T1078.004",
+          "technique_name": "Valid Accounts: Cloud Accounts",
+          "kill_chain_stage": "Credential Abuse"
+        },
+        "blast_radius_assessment": "High - Potential compromise of backend payment databases or privileged credentials.",
+        "action_priority": "P1 - CRITICAL (15-minute SLA)",
+        "remediation_playbook": [
+          "1. [CONTAINMENT] Isolate source entity 203.0.113.64 via edge firewall rule and revoke active JWT tokens for user 'sarah.vance@fintech-shield.internal'.",
+          "2. [FORENSICS] Capture memory dump and container snapshot of target resource '/admin/accounts/manage'.",
+          "3. [AUDIT] Check database access logs for queries matching payload signatures during the last 60 minutes.",
+          "4. [ERADICATION] Force global password & MFA reset for account 'sarah.vance@fintech-shield.internal'.",
+          "5. [NOTIFICATION] Escalate incident ticket to Lead Incident Commander and Legal/Compliance if PII was exposed."
+        ],
+        "synthesized_by": "ThreatSynth Gen-AI Reasoning Engine v1.0"
+      },
+      "correlation": {
+        "has_correlation": false,
+        "matched_rules": [],
+        "conflicts": [],
+        "correlated_alert_ids": [],
+        "incident_blast_radius_score": 20,
+        "correlation_summary": "Standalone individual event"
+      }
+    },
+    {
+      "alert_id": "ALT-DRILL-003",
+      "timestamp": "2026-08-22T11:00:36.693100+00:00",
+      "alert_name": "Authentication Brute Force Password Spray",
+      "source_ip": "185.220.101.89",
+      "source_country": "DE",
+      "is_tor": false,
+      "username": "john.doe@fintech.io",
+      "resource": "/api/v2/auth/oauth/token",
+      "status_code": 401,
+      "attack_type": "BRUTE_FORCE",
+      "failed_login_count": 20,
+      "request_rate_per_sec": 30.0,
+      "payload": "{\"username\": \"john.doe\", \"password\": \"password123\"}",
+      "outbound_bytes_mb": 0.05,
+      "impossible_travel_speed_kmh": 0.0,
+      "port_scan_distinct_ports": 0,
+      "privilege_escalation": false,
+      "hour_of_day": 19,
+      "sensitive_payload": "FAILED_ATTEMPTS=18; USER_AGENT=Hydra/9.2",
+      "classification": "Medium",
+      "ground_truth_risk": "Medium",
+      "risk_level": "Medium",
+      "confidence": 1.0,
+      "anomaly_score": 0.4509,
+      "probabilities": {
+        "High": 0.0,
+        "Low": 0.0,
+        "Medium": 1.0
+      },
+      "extracted_features": {
+        "failed_login": 20.0,
+        "req_rate": 30.0,
+        "payload_entropy": 4.1943,
+        "is_admin": false,
+        "speed_kmh": 0.0,
+        "ports": 0.0,
+        "outbound_mb": 0.05,
+        "has_sqli": false,
+        "priv_escalation": false,
+        "geo_risk": 0.0
+      },
+      "explainability": {
+        "predicted_risk": "Medium",
+        "confidence": 1.0,
+        "probabilities": {
+          "High": 0.0,
+          "Low": 0.0,
+          "Medium": 1.0
+        },
+        "explanation_summary": "Classified as MEDIUM RISK with suspicious signals in Failed Login Count. Monitor and review.",
+        "top_risk_drivers": [
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 20.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.1921,
+            "impact": "INCREASES_RISK",
+            "explanation": "High volume of failed authentications (20 attempts) indicating brute force attack"
+          },
+          {
+            "feature": "error_status_rate",
+            "display_name": "Error Status Rate",
+            "value": 1.0,
+            "importance_weight": 0.1265,
+            "contribution_score": 0.1265,
+            "impact": "INCREASES_RISK",
+            "explanation": "Frequency of HTTP 4xx/5xx security and server errors: observed value = 1.0"
+          },
+          {
+            "feature": "request_rate_per_sec",
+            "display_name": "Request Rate Per Sec",
+            "value": 30.0,
+            "importance_weight": 0.2163,
+            "contribution_score": 0.1254,
+            "impact": "INCREASES_RISK",
+            "explanation": "Burst request velocity against API endpoints: observed value = 30.0"
+          }
+        ],
+        "mitigating_factors": [
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          }
+        ],
+        "all_factors": [
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 20.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.1921,
+            "impact": "INCREASES_RISK",
+            "explanation": "High volume of failed authentications (20 attempts) indicating brute force attack"
+          },
+          {
+            "feature": "error_status_rate",
+            "display_name": "Error Status Rate",
+            "value": 1.0,
+            "importance_weight": 0.1265,
+            "contribution_score": 0.1265,
+            "impact": "INCREASES_RISK",
+            "explanation": "Frequency of HTTP 4xx/5xx security and server errors: observed value = 1.0"
+          },
+          {
+            "feature": "request_rate_per_sec",
+            "display_name": "Request Rate Per Sec",
+            "value": 30.0,
+            "importance_weight": 0.2163,
+            "contribution_score": 0.1254,
+            "impact": "INCREASES_RISK",
+            "explanation": "Burst request velocity against API endpoints: observed value = 30.0"
+          },
+          {
+            "feature": "payload_entropy",
+            "display_name": "Payload Entropy",
+            "value": 4.19,
+            "importance_weight": 0.0262,
+            "contribution_score": 0.0111,
+            "impact": "NEUTRAL",
+            "explanation": "Shannon randomness metric indicative of payload obfuscation or binary injection: observed value = 4.194300174713135"
+          },
+          {
+            "feature": "outbound_bytes_mb",
+            "display_name": "Outbound Bytes Mb",
+            "value": 0.05,
+            "importance_weight": 0.1019,
+            "contribution_score": -0.0009,
+            "impact": "NEUTRAL",
+            "explanation": "Volume of outbound data transfer indicative of data exfiltration: observed value = 0.05000000074505806"
+          },
+          {
+            "feature": "payload_length",
+            "display_name": "Payload Length",
+            "value": 51.0,
+            "importance_weight": 0.04,
+            "contribution_score": 0.0001,
+            "impact": "NEUTRAL",
+            "explanation": "Size of raw HTTP or query payload: observed value = 51.0"
+          },
+          {
+            "feature": "is_admin_targeted",
+            "display_name": "Is Admin Targeted",
+            "value": 0.0,
+            "importance_weight": 0.0738,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Targeting privileged accounts (root/admin/db_owner): observed value = 0.0"
+          },
+          {
+            "feature": "impossible_travel_speed_kmh",
+            "display_name": "Impossible Travel Speed Kmh",
+            "value": 0.0,
+            "importance_weight": 0.0065,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Physical velocity required between consecutive geographic access events: observed value = 0.0"
+          },
+          {
+            "feature": "port_scan_distinct_ports",
+            "display_name": "Port Scan Distinct Ports",
+            "value": 0.0,
+            "importance_weight": 0.0218,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Breadth of reconnaissance targeting internal network ports: observed value = 0.0"
+          },
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          },
+          {
+            "feature": "privilege_escalation_signal",
+            "display_name": "Privilege Escalation Signal",
+            "value": 0.0,
+            "importance_weight": 0.0953,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "System commands or tokens attempting kernel/root privilege escalation: observed value = 0.0"
+          },
+          {
+            "feature": "geo_risk_weight",
+            "display_name": "Geo Risk Weight",
+            "value": 0.0,
+            "importance_weight": 0.1096,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Geopolitical risk or anonymizing proxy/TOR node usage: observed value = 0.0"
+          },
+          {
+            "feature": "off_hours_activity",
+            "display_name": "Off Hours Activity",
+            "value": 0.0,
+            "importance_weight": 0.1183,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Operations triggered outside normal business hours: observed value = 0.0"
+          },
+          {
+            "feature": "known_attack_signature_match",
+            "display_name": "Known Attack Signature Match",
+            "value": 0.0,
+            "importance_weight": 0.0,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Exact match against known threat intelligence CVE/signature database: observed value = 0.0"
+          }
+        ],
+        "model_architecture": "Ensemble Random Forest Classifier + Isolation Forest Anomaly Detector"
+      },
+      "genai_brief": {
+        "executive_summary": "ELEVATED THREAT DETECTED: Suspicious activity observed targeting /api/v2/auth/oauth/token from 185.220.101.89. Pattern aligns with Brute Force: Password Guessing (T1110.001). Anomaly scores suggest automated scanning or unauthorized credential testing.",
+        "threat_actor_profile": "Automated Credential Stuffing Botnet",
+        "mitre_attack": {
+          "tactic": "Credential Access",
+          "technique_id": "T1110.001",
+          "technique_name": "Brute Force: Password Guessing",
+          "kill_chain_stage": "Credential Access"
+        },
+        "blast_radius_assessment": "Medium - Limited to perimeter reconnaissance or rate-limited authentication failures.",
+        "action_priority": "P2 - HIGH (2-hour SLA)",
+        "remediation_playbook": [
+          "1. [MONITOR] Place temporary rate limit (5 req/min) on IP 185.220.101.89.",
+          "2. [VERIFY] Contact user 'john.doe@fintech.io' via out-of-band communication (Slack/SMS) to verify login authenticity.",
+          "3. [AUDIT] Correlate with concurrent alerts in SIEM for IP 185.220.101.89 over a 4-hour window.",
+          "4. [CLOSE/ESCALATE] Escalate to High if repeated failures continue past threshold."
+        ],
+        "synthesized_by": "ThreatSynth Gen-AI Reasoning Engine v1.0"
+      },
+      "correlation": {
+        "has_correlation": false,
+        "matched_rules": [],
+        "conflicts": [],
+        "correlated_alert_ids": [],
+        "incident_blast_radius_score": 20,
+        "correlation_summary": "Standalone individual event"
+      }
+    },
+    {
+      "alert_id": "ALT-DRILL-004",
+      "timestamp": "2026-08-22T11:00:36.693111+00:00",
+      "alert_name": "Internal Network Reconnaissance & Port Probe",
+      "source_ip": "10.244.2.169",
+      "source_country": "US",
+      "is_tor": false,
+      "username": "anonymous_client_99",
+      "resource": "/internal/k8s/etcd/keys",
+      "status_code": 404,
+      "attack_type": "PORT_SCAN",
+      "failed_login_count": 0,
+      "request_rate_per_sec": 65.0,
+      "payload": "SYN_PROBE port=2379,2380,6443,10250,8080",
+      "outbound_bytes_mb": 0.12,
+      "impossible_travel_speed_kmh": 0.0,
+      "port_scan_distinct_ports": 16,
+      "privilege_escalation": false,
+      "hour_of_day": 14,
+      "sensitive_payload": "NMAP_SWEEP: targets=10.0.0.0/16 open_ports=2379",
+      "classification": "Medium",
+      "ground_truth_risk": "Medium",
+      "risk_level": "Medium",
+      "confidence": 1.0,
+      "anomaly_score": 0.5204,
+      "probabilities": {
+        "High": 0.0,
+        "Low": 0.0,
+        "Medium": 1.0
+      },
+      "extracted_features": {
+        "failed_login": 0.0,
+        "req_rate": 65.0,
+        "payload_entropy": 4.4251,
+        "is_admin": false,
+        "speed_kmh": 0.0,
+        "ports": 16.0,
+        "outbound_mb": 0.12,
+        "has_sqli": false,
+        "priv_escalation": false,
+        "geo_risk": 0.0
+      },
+      "explainability": {
+        "predicted_risk": "Medium",
+        "confidence": 1.0,
+        "probabilities": {
+          "High": 0.0,
+          "Low": 0.0,
+          "Medium": 1.0
+        },
+        "explanation_summary": "Classified as MEDIUM RISK with suspicious signals in Request Rate Per Sec. Monitor and review.",
+        "top_risk_drivers": [
+          {
+            "feature": "request_rate_per_sec",
+            "display_name": "Request Rate Per Sec",
+            "value": 65.0,
+            "importance_weight": 0.2163,
+            "contribution_score": 0.2768,
+            "impact": "INCREASES_RISK",
+            "explanation": "Burst request velocity against API endpoints: observed value = 65.0"
+          },
+          {
+            "feature": "error_status_rate",
+            "display_name": "Error Status Rate",
+            "value": 1.0,
+            "importance_weight": 0.1265,
+            "contribution_score": 0.1265,
+            "impact": "INCREASES_RISK",
+            "explanation": "Frequency of HTTP 4xx/5xx security and server errors: observed value = 1.0"
+          }
+        ],
+        "mitigating_factors": [
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 0.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Number of consecutive failed authentication attempts: observed value = 0.0"
+          },
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          }
+        ],
+        "all_factors": [
+          {
+            "feature": "request_rate_per_sec",
+            "display_name": "Request Rate Per Sec",
+            "value": 65.0,
+            "importance_weight": 0.2163,
+            "contribution_score": 0.2768,
+            "impact": "INCREASES_RISK",
+            "explanation": "Burst request velocity against API endpoints: observed value = 65.0"
+          },
+          {
+            "feature": "error_status_rate",
+            "display_name": "Error Status Rate",
+            "value": 1.0,
+            "importance_weight": 0.1265,
+            "contribution_score": 0.1265,
+            "impact": "INCREASES_RISK",
+            "explanation": "Frequency of HTTP 4xx/5xx security and server errors: observed value = 1.0"
+          },
+          {
+            "feature": "port_scan_distinct_ports",
+            "display_name": "Port Scan Distinct Ports",
+            "value": 16.0,
+            "importance_weight": 0.0218,
+            "contribution_score": 0.0175,
+            "impact": "NEUTRAL",
+            "explanation": "Port scanning probe across 16 distinct ports"
+          },
+          {
+            "feature": "payload_entropy",
+            "display_name": "Payload Entropy",
+            "value": 4.43,
+            "importance_weight": 0.0262,
+            "contribution_score": 0.0126,
+            "impact": "NEUTRAL",
+            "explanation": "Shannon randomness metric indicative of payload obfuscation or binary injection: observed value = 4.425099849700928"
+          },
+          {
+            "feature": "payload_length",
+            "display_name": "Payload Length",
+            "value": 40.0,
+            "importance_weight": 0.04,
+            "contribution_score": -0.0008,
+            "impact": "NEUTRAL",
+            "explanation": "Size of raw HTTP or query payload: observed value = 40.0"
+          },
+          {
+            "feature": "outbound_bytes_mb",
+            "display_name": "Outbound Bytes Mb",
+            "value": 0.12,
+            "importance_weight": 0.1019,
+            "contribution_score": -0.0008,
+            "impact": "NEUTRAL",
+            "explanation": "Volume of outbound data transfer indicative of data exfiltration: observed value = 0.11999999731779099"
+          },
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 0.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Number of consecutive failed authentication attempts: observed value = 0.0"
+          },
+          {
+            "feature": "is_admin_targeted",
+            "display_name": "Is Admin Targeted",
+            "value": 0.0,
+            "importance_weight": 0.0738,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Targeting privileged accounts (root/admin/db_owner): observed value = 0.0"
+          },
+          {
+            "feature": "impossible_travel_speed_kmh",
+            "display_name": "Impossible Travel Speed Kmh",
+            "value": 0.0,
+            "importance_weight": 0.0065,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Physical velocity required between consecutive geographic access events: observed value = 0.0"
+          },
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          },
+          {
+            "feature": "privilege_escalation_signal",
+            "display_name": "Privilege Escalation Signal",
+            "value": 0.0,
+            "importance_weight": 0.0953,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "System commands or tokens attempting kernel/root privilege escalation: observed value = 0.0"
+          },
+          {
+            "feature": "geo_risk_weight",
+            "display_name": "Geo Risk Weight",
+            "value": 0.0,
+            "importance_weight": 0.1096,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Geopolitical risk or anonymizing proxy/TOR node usage: observed value = 0.0"
+          },
+          {
+            "feature": "off_hours_activity",
+            "display_name": "Off Hours Activity",
+            "value": 0.0,
+            "importance_weight": 0.1183,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Operations triggered outside normal business hours: observed value = 0.0"
+          },
+          {
+            "feature": "known_attack_signature_match",
+            "display_name": "Known Attack Signature Match",
+            "value": 0.0,
+            "importance_weight": 0.0,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Exact match against known threat intelligence CVE/signature database: observed value = 0.0"
+          }
+        ],
+        "model_architecture": "Ensemble Random Forest Classifier + Isolation Forest Anomaly Detector"
+      },
+      "genai_brief": {
+        "executive_summary": "ELEVATED THREAT DETECTED: Suspicious activity observed targeting /internal/k8s/etcd/keys from 10.244.2.169. Pattern aligns with Network Service Discovery (T1046). Anomaly scores suggest automated scanning or unauthorized credential testing.",
+        "threat_actor_profile": "Network Reconnaissance Probe",
+        "mitre_attack": {
+          "tactic": "Discovery",
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "kill_chain_stage": "Reconnaissance"
+        },
+        "blast_radius_assessment": "Medium - Limited to perimeter reconnaissance or rate-limited authentication failures.",
+        "action_priority": "P2 - HIGH (2-hour SLA)",
+        "remediation_playbook": [
+          "1. [MONITOR] Place temporary rate limit (5 req/min) on IP 10.244.2.169.",
+          "2. [VERIFY] Contact user 'anonymous_client_99' via out-of-band communication (Slack/SMS) to verify login authenticity.",
+          "3. [AUDIT] Correlate with concurrent alerts in SIEM for IP 10.244.2.169 over a 4-hour window.",
+          "4. [CLOSE/ESCALATE] Escalate to High if repeated failures continue past threshold."
+        ],
+        "synthesized_by": "ThreatSynth Gen-AI Reasoning Engine v1.0"
+      },
+      "correlation": {
+        "has_correlation": false,
+        "matched_rules": [],
+        "conflicts": [],
+        "correlated_alert_ids": [],
+        "incident_blast_radius_score": 20,
+        "correlation_summary": "Standalone individual event"
+      }
+    },
+    {
+      "alert_id": "ALT-DRILL-005",
+      "timestamp": "2026-08-22T11:00:36.693123+00:00",
+      "alert_name": "Routine Kubernetes Liveness Health Probe",
+      "source_ip": "10.0.0.1",
+      "source_country": "US",
+      "is_tor": false,
+      "username": "kubelet-health-probe",
+      "resource": "/healthz",
+      "status_code": 200,
+      "attack_type": "BENIGN_PROBE",
+      "failed_login_count": 0,
+      "request_rate_per_sec": 1.0,
+      "payload": "GET /healthz HTTP/1.1",
+      "outbound_bytes_mb": 0.001,
+      "impossible_travel_speed_kmh": 0.0,
+      "port_scan_distinct_ports": 1,
+      "privilege_escalation": false,
+      "hour_of_day": 12,
+      "sensitive_payload": "HEALTHCHECK_OK: latency_ms=1.2",
+      "classification": "Low",
+      "ground_truth_risk": "Low",
+      "risk_level": "Low",
+      "confidence": 1.0,
+      "anomaly_score": 0.4369,
+      "probabilities": {
+        "High": 0.0,
+        "Low": 1.0,
+        "Medium": 0.0
+      },
+      "extracted_features": {
+        "failed_login": 0.0,
+        "req_rate": 1.0,
+        "payload_entropy": 3.7849,
+        "is_admin": false,
+        "speed_kmh": 0.0,
+        "ports": 1.0,
+        "outbound_mb": 0.001,
+        "has_sqli": false,
+        "priv_escalation": false,
+        "geo_risk": 0.0
+      },
+      "explainability": {
+        "predicted_risk": "Low",
+        "confidence": 1.0,
+        "probabilities": {
+          "High": 0.0,
+          "Low": 1.0,
+          "Medium": 0.0
+        },
+        "explanation_summary": "Classified as LOW RISK. Activity aligns with benign baseline operational telemetry.",
+        "top_risk_drivers": [],
+        "mitigating_factors": [
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 0.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Number of consecutive failed authentication attempts: observed value = 0.0"
+          },
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          }
+        ],
+        "all_factors": [
+          {
+            "feature": "payload_entropy",
+            "display_name": "Payload Entropy",
+            "value": 3.78,
+            "importance_weight": 0.0262,
+            "contribution_score": 0.0084,
+            "impact": "NEUTRAL",
+            "explanation": "Shannon randomness metric indicative of payload obfuscation or binary injection: observed value = 3.784899950027466"
+          },
+          {
+            "feature": "payload_length",
+            "display_name": "Payload Length",
+            "value": 21.0,
+            "importance_weight": 0.04,
+            "contribution_score": -0.0023,
+            "impact": "NEUTRAL",
+            "explanation": "Size of raw HTTP or query payload: observed value = 21.0"
+          },
+          {
+            "feature": "port_scan_distinct_ports",
+            "display_name": "Port Scan Distinct Ports",
+            "value": 1.0,
+            "importance_weight": 0.0218,
+            "contribution_score": 0.0011,
+            "impact": "NEUTRAL",
+            "explanation": "Breadth of reconnaissance targeting internal network ports: observed value = 1.0"
+          },
+          {
+            "feature": "outbound_bytes_mb",
+            "display_name": "Outbound Bytes Mb",
+            "value": 0.0,
+            "importance_weight": 0.1019,
+            "contribution_score": -0.001,
+            "impact": "NEUTRAL",
+            "explanation": "Volume of outbound data transfer indicative of data exfiltration: observed value = 0.0010000000474974513"
+          },
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 0.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Number of consecutive failed authentication attempts: observed value = 0.0"
+          },
+          {
+            "feature": "request_rate_per_sec",
+            "display_name": "Request Rate Per Sec",
+            "value": 1.0,
+            "importance_weight": 0.2163,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Burst request velocity against API endpoints: observed value = 1.0"
+          },
+          {
+            "feature": "is_admin_targeted",
+            "display_name": "Is Admin Targeted",
+            "value": 0.0,
+            "importance_weight": 0.0738,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Targeting privileged accounts (root/admin/db_owner): observed value = 0.0"
+          },
+          {
+            "feature": "impossible_travel_speed_kmh",
+            "display_name": "Impossible Travel Speed Kmh",
+            "value": 0.0,
+            "importance_weight": 0.0065,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Physical velocity required between consecutive geographic access events: observed value = 0.0"
+          },
+          {
+            "feature": "error_status_rate",
+            "display_name": "Error Status Rate",
+            "value": 0.0,
+            "importance_weight": 0.1265,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Frequency of HTTP 4xx/5xx security and server errors: observed value = 0.0"
+          },
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          },
+          {
+            "feature": "privilege_escalation_signal",
+            "display_name": "Privilege Escalation Signal",
+            "value": 0.0,
+            "importance_weight": 0.0953,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "System commands or tokens attempting kernel/root privilege escalation: observed value = 0.0"
+          },
+          {
+            "feature": "geo_risk_weight",
+            "display_name": "Geo Risk Weight",
+            "value": 0.0,
+            "importance_weight": 0.1096,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Geopolitical risk or anonymizing proxy/TOR node usage: observed value = 0.0"
+          },
+          {
+            "feature": "off_hours_activity",
+            "display_name": "Off Hours Activity",
+            "value": 0.0,
+            "importance_weight": 0.1183,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Operations triggered outside normal business hours: observed value = 0.0"
+          },
+          {
+            "feature": "known_attack_signature_match",
+            "display_name": "Known Attack Signature Match",
+            "value": 0.0,
+            "importance_weight": 0.0,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Exact match against known threat intelligence CVE/signature database: observed value = 0.0"
+          }
+        ],
+        "model_architecture": "Ensemble Random Forest Classifier + Isolation Forest Anomaly Detector"
+      },
+      "genai_brief": {
+        "executive_summary": "INFORMATIONAL / BENIGN: Routine event on /healthz. The event parameters match standard fintech baseline operations. No unauthorized escalation or data loss observed.",
+        "threat_actor_profile": "Routine Internal Infrastructure / Automated CI Probe",
+        "mitre_attack": {
+          "tactic": "Normal Operations",
+          "technique_id": "N/A",
+          "technique_name": "Authorized Operational Workload",
+          "kill_chain_stage": "Baseline Telemetry"
+        },
+        "blast_radius_assessment": "Low - Zero operational or compliance impact.",
+        "action_priority": "P4 - INFORMATIONAL (No SLA breach)",
+        "remediation_playbook": [
+          "1. [LOG] Retain alert in telemetry store for 90 days baseline training.",
+          "2. [CLOSE] Auto-resolve alert as Benign Baseline."
+        ],
+        "synthesized_by": "ThreatSynth Gen-AI Reasoning Engine v1.0"
+      },
+      "correlation": {
+        "has_correlation": false,
+        "matched_rules": [],
+        "conflicts": [],
+        "correlated_alert_ids": [],
+        "incident_blast_radius_score": 20,
+        "correlation_summary": "Standalone individual event"
+      }
+    },
+    {
+      "alert_id": "ALT-DRILL-006",
+      "timestamp": "2026-08-22T11:00:36.693130+00:00",
+      "alert_name": "Authorized CI/CD Deployment Pipeline Execution",
+      "source_ip": "140.82.112.4",
+      "source_country": "US",
+      "is_tor": false,
+      "username": "devops_deploy_bot",
+      "resource": "/ci/deploy/webhook",
+      "status_code": 200,
+      "attack_type": "BENIGN_DEPLOY",
+      "failed_login_count": 0,
+      "request_rate_per_sec": 2.0,
+      "payload": "{\"build_id\": \"b-98421\", \"branch\": \"release/2026.08\", \"status\": \"deployed\"}",
+      "outbound_bytes_mb": 0.45,
+      "impossible_travel_speed_kmh": 0.0,
+      "port_scan_distinct_ports": 0,
+      "privilege_escalation": false,
+      "hour_of_day": 15,
+      "sensitive_payload": "COMMIT_SHA=7a9f2bc; VERIFIED_KEY=sig_ok",
+      "classification": "Low",
+      "ground_truth_risk": "Low",
+      "risk_level": "Low",
+      "confidence": 1.0,
+      "anomaly_score": 0.4526,
+      "probabilities": {
+        "High": 0.0,
+        "Low": 1.0,
+        "Medium": 0.0
+      },
+      "extracted_features": {
+        "failed_login": 0.0,
+        "req_rate": 2.0,
+        "payload_entropy": 4.6315,
+        "is_admin": false,
+        "speed_kmh": 0.0,
+        "ports": 0.0,
+        "outbound_mb": 0.45,
+        "has_sqli": false,
+        "priv_escalation": false,
+        "geo_risk": 0.0
+      },
+      "explainability": {
+        "predicted_risk": "Low",
+        "confidence": 1.0,
+        "probabilities": {
+          "High": 0.0,
+          "Low": 1.0,
+          "Medium": 0.0
+        },
+        "explanation_summary": "Classified as LOW RISK. Activity aligns with benign baseline operational telemetry.",
+        "top_risk_drivers": [],
+        "mitigating_factors": [
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 0.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Number of consecutive failed authentication attempts: observed value = 0.0"
+          },
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          }
+        ],
+        "all_factors": [
+          {
+            "feature": "payload_entropy",
+            "display_name": "Payload Entropy",
+            "value": 4.63,
+            "importance_weight": 0.0262,
+            "contribution_score": 0.0139,
+            "impact": "NEUTRAL",
+            "explanation": "Shannon randomness metric indicative of payload obfuscation or binary injection: observed value = 4.631499767303467"
+          },
+          {
+            "feature": "request_rate_per_sec",
+            "display_name": "Request Rate Per Sec",
+            "value": 2.0,
+            "importance_weight": 0.2163,
+            "contribution_score": 0.0043,
+            "impact": "NEUTRAL",
+            "explanation": "Burst request velocity against API endpoints: observed value = 2.0"
+          },
+          {
+            "feature": "payload_length",
+            "display_name": "Payload Length",
+            "value": 74.0,
+            "importance_weight": 0.04,
+            "contribution_score": 0.0019,
+            "impact": "NEUTRAL",
+            "explanation": "Size of raw HTTP or query payload: observed value = 74.0"
+          },
+          {
+            "feature": "outbound_bytes_mb",
+            "display_name": "Outbound Bytes Mb",
+            "value": 0.45,
+            "importance_weight": 0.1019,
+            "contribution_score": -0.0001,
+            "impact": "NEUTRAL",
+            "explanation": "Volume of outbound data transfer indicative of data exfiltration: observed value = 0.44999998807907104"
+          },
+          {
+            "feature": "failed_login_count",
+            "display_name": "Failed Login Count",
+            "value": 0.0,
+            "importance_weight": 0.048,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Number of consecutive failed authentication attempts: observed value = 0.0"
+          },
+          {
+            "feature": "is_admin_targeted",
+            "display_name": "Is Admin Targeted",
+            "value": 0.0,
+            "importance_weight": 0.0738,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Targeting privileged accounts (root/admin/db_owner): observed value = 0.0"
+          },
+          {
+            "feature": "impossible_travel_speed_kmh",
+            "display_name": "Impossible Travel Speed Kmh",
+            "value": 0.0,
+            "importance_weight": 0.0065,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Physical velocity required between consecutive geographic access events: observed value = 0.0"
+          },
+          {
+            "feature": "port_scan_distinct_ports",
+            "display_name": "Port Scan Distinct Ports",
+            "value": 0.0,
+            "importance_weight": 0.0218,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Breadth of reconnaissance targeting internal network ports: observed value = 0.0"
+          },
+          {
+            "feature": "error_status_rate",
+            "display_name": "Error Status Rate",
+            "value": 0.0,
+            "importance_weight": 0.1265,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Frequency of HTTP 4xx/5xx security and server errors: observed value = 0.0"
+          },
+          {
+            "feature": "sql_injection_indicator",
+            "display_name": "Sql Injection Indicator",
+            "value": 0.0,
+            "importance_weight": 0.0158,
+            "contribution_score": 0.0,
+            "impact": "DECREASES_RISK",
+            "explanation": "Presence of SQL injection syntax and evasion patterns: observed value = 0.0"
+          },
+          {
+            "feature": "privilege_escalation_signal",
+            "display_name": "Privilege Escalation Signal",
+            "value": 0.0,
+            "importance_weight": 0.0953,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "System commands or tokens attempting kernel/root privilege escalation: observed value = 0.0"
+          },
+          {
+            "feature": "geo_risk_weight",
+            "display_name": "Geo Risk Weight",
+            "value": 0.0,
+            "importance_weight": 0.1096,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Geopolitical risk or anonymizing proxy/TOR node usage: observed value = 0.0"
+          },
+          {
+            "feature": "off_hours_activity",
+            "display_name": "Off Hours Activity",
+            "value": 0.0,
+            "importance_weight": 0.1183,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Operations triggered outside normal business hours: observed value = 0.0"
+          },
+          {
+            "feature": "known_attack_signature_match",
+            "display_name": "Known Attack Signature Match",
+            "value": 0.0,
+            "importance_weight": 0.0,
+            "contribution_score": 0.0,
+            "impact": "NEUTRAL",
+            "explanation": "Exact match against known threat intelligence CVE/signature database: observed value = 0.0"
+          }
+        ],
+        "model_architecture": "Ensemble Random Forest Classifier + Isolation Forest Anomaly Detector"
+      },
+      "genai_brief": {
+        "executive_summary": "INFORMATIONAL / BENIGN: Routine event on /ci/deploy/webhook. The event parameters match standard fintech baseline operations. No unauthorized escalation or data loss observed.",
+        "threat_actor_profile": "Routine Internal Infrastructure / Automated CI Probe",
+        "mitre_attack": {
+          "tactic": "Normal Operations",
+          "technique_id": "N/A",
+          "technique_name": "Authorized Operational Workload",
+          "kill_chain_stage": "Baseline Telemetry"
+        },
+        "blast_radius_assessment": "Low - Zero operational or compliance impact.",
+        "action_priority": "P4 - INFORMATIONAL (No SLA breach)",
+        "remediation_playbook": [
+          "1. [LOG] Retain alert in telemetry store for 90 days baseline training.",
+          "2. [CLOSE] Auto-resolve alert as Benign Baseline."
+        ],
+        "synthesized_by": "ThreatSynth Gen-AI Reasoning Engine v1.0"
+      },
+      "correlation": {
+        "has_correlation": false,
+        "matched_rules": [],
+        "conflicts": [],
+        "correlated_alert_ids": [],
+        "incident_blast_radius_score": 20,
+        "correlation_summary": "Standalone individual event"
+      }
+    }
+  ]
+}

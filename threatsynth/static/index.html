@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThreatSynth 79 // Autonomous Cyber SOC & Real-Time Threat Triage</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN for SHAP & Risk Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts (Inter + JetBrains Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom Cyber SOC Styling -->
+  <link rel="stylesheet" href="/static/css/style.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            cyber: {
+              bg: '#090d16',
+              card: '#0f172a',
+              border: '#1e293b',
+              neonCyan: '#06b6d4',
+              neonRose: '#f43f5e',
+              neonAmber: '#f59e0b',
+              neonEmerald: '#10b981',
+              neonIndigo: '#6366f1'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-[#070b14] text-slate-200 font-sans antialiased min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
+
+  <!-- TOP CYBER NAVIGATION BAR -->
+  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40 px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="h-9 w-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-400/50">
+        <i data-lucide="shield-alert" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base font-bold tracking-wider text-white font-mono">THREATSYNTH<span class="text-cyan-400">.79</span></h1>
+          <span class="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
+            FINTECH SOC DRILL
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 font-mono">Autonomous ML Triage & Identity RBAC Engine</p>
+      </div>
+    </div>
+
+    <!-- ROLE SIMULATOR / IDENTITY SELECTOR -->
+    <div class="flex items-center gap-3 bg-slate-900/90 border border-slate-800 rounded-xl p-1.5 shadow-inner">
+      <div class="flex items-center gap-1.5 px-2 text-xs text-slate-400 font-mono">
+        <i data-lucide="user-check" class="w-4 h-4 text-cyan-400"></i>
+        <span>Active Identity:</span>
+      </div>
+      
+      <div class="flex items-center gap-1" id="roleSelectorGroup">
+        <button onclick="switchUserRole('soc_analyst')" id="btnRole-soc_analyst" class="role-btn px-2.5 py-1 text-xs rounded-lg font-medium transition-all bg-cyan-600 text-white shadow-sm flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-cyan-300 animate-pulse"></span>
+          SOC Analyst
+        </button>
+        <button onclick="switchUserRole('admin')" id="btnRole-admin" class="role-btn px-2.5 py-1 text-xs rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+          Admin
+        </button>
+        <button onclick="switchUserRole('tier1_viewer')" id="btnRole-tier1_viewer" class="role-btn px-2.5 py-1 text-xs rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          Tier 1 (Redacted)
+        </button>
+        <button onclick="switchUserRole('unauthorized_guest')" id="btnRole-unauthorized_guest" class="role-btn px-2.5 py-1 text-xs rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+          Unauthorized Guest
+        </button>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS & EXPORT -->
+    <div class="flex items-center gap-2">
+      <button onclick="openUploadModal()" class="px-3 py-1.5 text-xs font-semibold text-cyan-300 bg-cyan-950/60 hover:bg-cyan-900/60 border border-cyan-800/80 rounded-lg flex items-center gap-1.5 transition">
+        <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+        Ingest Alert JSON
+      </button>
+      <button onclick="downloadPdfReport()" class="px-3 py-1.5 text-xs font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg flex items-center gap-1.5 transition">
+        <i data-lucide="file-text" class="w-4 h-4 text-emerald-400"></i>
+        Export PDF Dossier
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="flex-1 p-4 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+
+    <!-- TOP KPI & STATUS TILES -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      
+      <!-- Total Ingested -->
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 backdrop-blur relative overflow-hidden group">
+        <div class="flex items-center justify-between text-slate-400 text-xs font-mono">
+          <span>INGESTED ALERTS</span>
+          <i data-lucide="database" class="w-4 h-4 text-cyan-400"></i>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold font-mono text-white" id="statTotal">--</span>
+          <span class="text-[11px] text-cyan-400 font-mono">Real-Time</span>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
+      </div>
+
+      <!-- High Risk Alerts -->
+      <div class="bg-slate-900/60 border border-rose-900/40 rounded-xl p-4 backdrop-blur relative overflow-hidden">
+        <div class="flex items-center justify-between text-rose-400 text-xs font-mono">
+          <span>HIGH RISK THREATS</span>
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold font-mono text-rose-400" id="statHigh">--</span>
+          <span class="text-[11px] text-rose-400/80 font-mono">Critical SLA</span>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-rose-600 to-red-500"></div>
+      </div>
+
+      <!-- Medium Risk Anomalies -->
+      <div class="bg-slate-900/60 border border-amber-900/40 rounded-xl p-4 backdrop-blur relative overflow-hidden">
+        <div class="flex items-center justify-between text-amber-400 text-xs font-mono">
+          <span>MEDIUM ANOMALIES</span>
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold font-mono text-amber-400" id="statMedium">--</span>
+          <span class="text-[11px] text-amber-400/80 font-mono">Review Queue</span>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 to-yellow-500"></div>
+      </div>
+
+      <!-- Low / Benign Baselines -->
+      <div class="bg-slate-900/60 border border-emerald-900/40 rounded-xl p-4 backdrop-blur relative overflow-hidden">
+        <div class="flex items-center justify-between text-emerald-400 text-xs font-mono">
+          <span>BENIGN BASELINES</span>
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold font-mono text-emerald-400" id="statLow">--</span>
+          <span class="text-[11px] text-emerald-400/80 font-mono">Auto-Triage</span>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
+      </div>
+
+      <!-- RBAC Security Status -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 backdrop-blur relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 text-xs font-mono">
+          <span>RBAC ENFORCEMENT</span>
+          <i data-lucide="lock" class="w-4 h-4 text-indigo-400"></i>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-xs font-bold font-mono uppercase text-indigo-300" id="currentRoleBadge">SOC ANALYST</span>
+        </div>
+        <div class="text-[11px] text-slate-400 font-mono mt-1" id="currentRoleStatus">Full Forensic Access</div>
+        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+      </div>
+
+    </div>
+
+    <!-- FAST INGESTION SAMPLES BAR -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2 text-xs text-slate-300 font-mono">
+        <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i>
+        <span class="font-semibold">Quick Ingest FinTech Scenarios:</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="injectSampleAlert('01_sql_injection_exfil.json')" class="px-2.5 py-1 text-xs bg-rose-950/70 hover:bg-rose-900/80 text-rose-300 border border-rose-800/80 rounded font-mono transition">
+          + SQL Injection (High)
+        </button>
+        <button onclick="injectSampleAlert('02_impossible_travel_admin.json')" class="px-2.5 py-1 text-xs bg-rose-950/70 hover:bg-rose-900/80 text-rose-300 border border-rose-800/80 rounded font-mono transition">
+          + Impossible Travel (High)
+        </button>
+        <button onclick="injectSampleAlert('03_brute_force_auth.json')" class="px-2.5 py-1 text-xs bg-amber-950/70 hover:bg-amber-900/80 text-amber-300 border border-amber-800/80 rounded font-mono transition">
+          + Brute Force (Med)
+        </button>
+        <button onclick="injectSampleAlert('04_internal_port_scan.json')" class="px-2.5 py-1 text-xs bg-amber-950/70 hover:bg-amber-900/80 text-amber-300 border border-amber-800/80 rounded font-mono transition">
+          + Port Scan (Med)
+        </button>
+        <button onclick="injectSampleAlert('05_benign_healthcheck.json')" class="px-2.5 py-1 text-xs bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-800/80 rounded font-mono transition">
+          + Health Check (Low)
+        </button>
+        <button onclick="injectSampleAlert('batch_incident_drill.json')" class="px-2.5 py-1 text-xs bg-cyan-950/70 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-800/80 rounded font-mono transition">
+          + Ingest All Drill Alerts
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN WORKSPACE: TRIAGE FEED (LEFT) & ALERT INSPECTOR (RIGHT) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT: ALERT TRIAGE FEED (7 COLS) -->
+      <div class="lg:col-span-7 space-y-4">
+        
+        <!-- Filter and Search Header -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i>
+            <h2 class="text-sm font-bold font-mono tracking-wide text-white uppercase">Live Security Alert Stream</h2>
+          </div>
+
+          <!-- Risk Filters -->
+          <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
+            <button onclick="filterByRisk('')" id="filter-all" class="px-2.5 py-1 rounded font-medium bg-slate-800 text-cyan-300">All</button>
+            <button onclick="filterByRisk('High')" id="filter-high" class="px-2 py-1 rounded font-medium text-slate-400 hover:text-rose-400">High</button>
+            <button onclick="filterByRisk('Medium')" id="filter-med" class="px-2 py-1 rounded font-medium text-slate-400 hover:text-amber-400">Medium</button>
+            <button onclick="filterByRisk('Low')" id="filter-low" class="px-2 py-1 rounded font-medium text-slate-400 hover:text-emerald-400">Low</button>
+          </div>
+        </div>
+
+        <!-- Alert Feed Container -->
+        <div class="space-y-2.5 max-h-[640px] overflow-y-auto pr-1" id="alertsListContainer">
+          <!-- Rendered via JS -->
+          <div class="text-center py-12 text-slate-500 font-mono text-sm">
+            <i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2 text-cyan-500"></i>
+            Loading live SIEM telemetry...
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: DEEP-DIVE INSPECTOR & EXPLAINABILITY (5 COLS) -->
+      <div class="lg:col-span-5 space-y-4">
+
+        <!-- Inspector Card -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-5 sticky top-20 shadow-xl" id="inspectorCard">
+          
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i data-lucide="microscope" class="w-4 h-4 text-cyan-400"></i>
+              <h3 class="text-sm font-bold font-mono tracking-wide text-white uppercase">Threat Intelligence Inspector</h3>
+            </div>
+            <span id="inspectorAccessTag" class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
+              SOC ANALYST VIEW
+            </span>
+          </div>
+
+          <div id="inspectorContent" class="space-y-4">
+            <div class="text-center py-16 text-slate-500 font-mono text-sm">
+              <i data-lucide="mouse-pointer-click" class="w-8 h-8 mx-auto mb-3 text-slate-600"></i>
+              Select an alert from the stream to inspect ML explainability, SHAP factors, and AI response playbook.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CORRELATION RULE ENGINE & ATTACK CHAIN MATRIX -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="git-merge" class="w-5 h-5 text-indigo-400"></i>
+          <div>
+            <h3 class="text-sm font-bold font-mono text-white uppercase">Multi-Alert Correlation & Conflict Rule Engine</h3>
+            <p class="text-xs text-slate-400 font-mono">Real-time detection of multi-stage attack chains & conflicting threat patterns</p>
+          </div>
+        </div>
+        <span class="px-2.5 py-1 text-xs font-mono rounded bg-indigo-950 text-indigo-300 border border-indigo-800" id="corrCountBadge">
+          0 Correlated Chains
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3" id="correlationCardsGrid">
+        <!-- Filled via JS -->
+      </div>
+    </div>
+
+    <!-- IMMUTABLE AUDIT TRAIL STREAM & COMPLIANCE VERIFICATION -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="file-check-2" class="w-5 h-5 text-emerald-400"></i>
+          <div>
+            <h3 class="text-sm font-bold font-mono text-white uppercase">Cryptographic Audit Trail (SHA-256 Chained)</h3>
+            <p class="text-xs text-slate-400 font-mono">Immutable ledger recording all access attempts, RBAC rejections, and user actions</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="verifyAuditChain()" class="px-2.5 py-1 text-xs font-mono font-medium rounded bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 flex items-center gap-1 transition">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            Verify Cryptographic Chain
+          </button>
+        </div>
+      </div>
+
+      <!-- Audit Table -->
+      <div class="overflow-x-auto border border-slate-800 rounded-lg">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="bg-slate-950 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-2.5">Timestamp</th>
+              <th class="p-2.5">User Identity (Role)</th>
+              <th class="p-2.5">Action & Endpoint</th>
+              <th class="p-2.5">Status</th>
+              <th class="p-2.5">Outcome</th>
+              <th class="p-2.5">Cryptographic Hash</th>
+            </tr>
+          </thead>
+          <tbody id="auditTableBody" class="divide-y divide-slate-800/60 text-slate-300">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MODEL PERFORMANCE & RETRAINING SECTION (ADMIN ONLY) -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="cpu" class="w-5 h-5 text-cyan-400"></i>
+          <div>
+            <h3 class="text-sm font-bold font-mono text-white uppercase">AI/ML Classification Pipeline & Retraining API</h3>
+            <p class="text-xs text-slate-400 font-mono">Ensemble Random Forest Classifier + Isolation Forest Anomaly Engine</p>
+          </div>
+        </div>
+        <button onclick="triggerRetrain()" id="btnRetrainModel" class="px-3 py-1.5 text-xs font-bold font-mono rounded bg-cyan-600 hover:bg-cyan-500 text-white flex items-center gap-1.5 transition shadow">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="retrainIcon"></i>
+          Retrain Model via API
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="modelMetricsGrid">
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+          <div class="text-slate-400 text-[11px] font-mono">MODEL ACCURACY</div>
+          <div class="text-lg font-bold font-mono text-cyan-400 mt-1" id="metricAcc">--%</div>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+          <div class="text-slate-400 text-[11px] font-mono">MACRO F1 SCORE</div>
+          <div class="text-lg font-bold font-mono text-emerald-400 mt-1" id="metricF1">--</div>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+          <div class="text-slate-400 text-[11px] font-mono">ANOMALY DETECTOR</div>
+          <div class="text-lg font-bold font-mono text-indigo-400 mt-1">Isolation Forest</div>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+          <div class="text-slate-400 text-[11px] font-mono">EXPLAINABILITY</div>
+          <div class="text-lg font-bold font-mono text-amber-400 mt-1">SHAP Factor Attribution</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: ALERT INGESTION (JSON UPLOAD / PASTE) -->
+  <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="terminal" class="w-5 h-5 text-cyan-400"></i>
+          <h3 class="text-base font-bold font-mono text-white">Ingest Raw Security Alert JSON</h3>
+        </div>
+        <button onclick="closeUploadModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- File Upload Zone -->
+      <div class="border-2 border-dashed border-slate-700 rounded-xl p-6 text-center hover:border-cyan-500 transition cursor-pointer" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept=".json" class="hidden" onchange="handleFileUpload(event)">
+        <i data-lucide="file-up" class="w-8 h-8 text-cyan-400 mx-auto mb-2"></i>
+        <p class="text-sm font-medium text-slate-200">Click to upload or drag & drop alert JSON file</p>
+        <p class="text-xs text-slate-500 mt-1">Supports single alert or batch array format</p>
+      </div>
+
+      <div class="relative flex py-1 items-center">
+        <div class="flex-grow border-t border-slate-800"></div>
+        <span class="flex-shrink mx-4 text-xs font-mono text-slate-500">OR PASTE RAW JSON</span>
+        <div class="flex-grow border-t border-slate-800"></div>
+      </div>
+
+      <!-- Textarea for Raw JSON -->
+      <div>
+        <textarea id="rawJsonInput" rows="6" placeholder='{"alert_name": "API Abuse", "username": "admin", "failed_login_count": 12, "request_rate_per_sec": 80, ...}' class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs font-mono text-cyan-300 focus:border-cyan-500 focus:outline-none"></textarea>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button onclick="closeUploadModal()" class="px-4 py-2 text-xs font-mono text-slate-400 hover:text-white">Cancel</button>
+        <button onclick="submitRawJson()" class="px-4 py-2 text-xs font-bold font-mono bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg transition">
+          Ingest & Triage Real-Time
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 px-8 py-4 text-center text-xs font-mono text-slate-500 flex flex-wrap items-center justify-between gap-4">
+    <div>ThreatSynth 79 // Fintech Incident Response Drill // Autonomous SOC</div>
+    <div class="flex items-center gap-4">
+      <span>Latency: <b class="text-cyan-400" id="latencyIndicator">&lt; 15ms</b></span>
+      <span>API Spec: <a href="/docs" target="_blank" class="text-slate-400 hover:text-cyan-400 underline">Swagger / OpenAPI</a></span>
+    </div>
+  </footer>
+
+  <!-- Application Logic JS -->
+  <script src="/static/js/app.js"></script>
+  <script>
+    // Initialize Lucide icons on load
+    lucide.createIcons();
+  </script>
+</body>
+</html>

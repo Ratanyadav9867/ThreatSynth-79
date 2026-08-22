@@ -1,0 +1,23 @@
+{
+  "alert_id": "ALT-DEMO-006",
+  "timestamp": "2026-08-22T10:47:15.190942+00:00",
+  "alert_name": "Authorized CI/CD Deployment Pipeline Execution",
+  "source_ip": "140.82.112.4",
+  "source_country": "US",
+  "is_tor": false,
+  "username": "devops_deploy_bot",
+  "resource": "/ci/deploy/webhook",
+  "status_code": 200,
+  "attack_type": "BENIGN_DEPLOY",
+  "failed_login_count": 0,
+  "request_rate_per_sec": 2.0,
+  "payload": "{\"build_id\": \"b-98421\", \"branch\": \"release/2026.08\", \"status\": \"deployed\"}",
+  "outbound_bytes_mb": 0.45,
+  "impossible_travel_speed_kmh": 0.0,
+  "port_scan_distinct_ports": 0,
+  "privilege_escalation": false,
+  "hour_of_day": 15,
+  "sensitive_payload": "COMMIT_SHA=7a9f2bc; VERIFIED_KEY=sig_ok",
+  "classification": "Low",
+  "ground_truth_risk": "Low"
+}

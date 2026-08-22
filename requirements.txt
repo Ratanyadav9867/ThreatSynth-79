@@ -1,0 +1,14 @@
+# ThreatSynth 79 - Production Dependencies
+fastapi>=0.115.0
+uvicorn>=0.30.0
+pydantic>=2.8.0
+scikit-learn>=1.5.0
+numpy>=1.26.0
+pandas>=2.2.0
+joblib>=1.4.0
+pyjwt>=2.9.0
+reportlab>=4.2.0
+python-multipart>=0.0.9
+pytest>=8.0.0
+httpx>=0.27.0
+rich>=13.7.0

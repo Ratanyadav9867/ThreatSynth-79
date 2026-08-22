@@ -1,0 +1,23 @@
+{
+  "alert_id": "ALT-DEMO-001",
+  "timestamp": "2026-08-22T10:47:15.190827+00:00",
+  "alert_name": "Critical SQL Injection Attempt on Core Payment API",
+  "source_ip": "198.51.100.122",
+  "source_country": "RU",
+  "is_tor": true,
+  "username": "admin",
+  "resource": "/api/v1/payments/transfer",
+  "status_code": 500,
+  "attack_type": "SQL_INJECTION",
+  "failed_login_count": 0,
+  "request_rate_per_sec": 45.0,
+  "payload": "1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT((SELECT database()), 0x3a, FLOOR(RAND(0)*2)) x FROM information_schema.tables GROUP BY x) a) --",
+  "outbound_bytes_mb": 14.5,
+  "impossible_travel_speed_kmh": 0.0,
+  "port_scan_distinct_ports": 0,
+  "privilege_escalation": true,
+  "hour_of_day": 3,
+  "sensitive_payload": "SELECT * FROM cardholder_vault WHERE token='NULL' OR 1=1; -- EXFILTRATE",
+  "classification": "High",
+  "ground_truth_risk": "High"
+}

@@ -1,0 +1,12 @@
+services:
+  threatsynth:
+    build: .
+    container_name: threatsynth-79-soc
+    ports:
+      - "8000:8000"
+    environment:
+      - THREATSYNTH_JWT_SECRET=threatsynth-super-secret-key-fintech-secops-2026
+    volumes:
+      - ./models:/app/models
+      - ./threatsynth/audit.jsonl:/app/threatsynth/audit.jsonl
+    restart: unless-stopped

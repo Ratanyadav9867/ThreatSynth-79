@@ -1,0 +1,54 @@
+/* Cyber SOC UI Styling & Glassmorphism */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+.alert-card {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.alert-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 4px 20px -2px rgba(6, 182, 212, 0.1);
+}
+
+.alert-card.active {
+  border-color: #06b6d4 !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.6);
+  }
+}
+
+.critical-pulse {
+  animation: pulseGlow 2s infinite;
+}
+
+.role-btn.active {
+  background-color: #0891b2 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(8, 145, 178, 0.4);
+}

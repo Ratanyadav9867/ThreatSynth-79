@@ -1,0 +1,23 @@
+{
+  "alert_id": "ALT-DEMO-002",
+  "timestamp": "2026-08-22T10:47:15.190884+00:00",
+  "alert_name": "Impossible Travel Velocity & Executive Account Compromise",
+  "source_ip": "203.0.113.16",
+  "source_country": "SG",
+  "is_tor": false,
+  "username": "sarah.vance@fintech-shield.internal",
+  "resource": "/admin/accounts/manage",
+  "status_code": 200,
+  "attack_type": "IMPOSSIBLE_TRAVEL",
+  "failed_login_count": 1,
+  "request_rate_per_sec": 8.0,
+  "payload": "{\"action\": \"export_all_customer_financial_records\", \"override_mfa\": true}",
+  "outbound_bytes_mb": 28.2,
+  "impossible_travel_speed_kmh": 1250.0,
+  "port_scan_distinct_ports": 0,
+  "privilege_escalation": true,
+  "hour_of_day": 2,
+  "sensitive_payload": "SESSION_TOKEN=jwt.ey...; LOCATION_DELTA=London_to_Singapore_in_15_mins",
+  "classification": "High",
+  "ground_truth_risk": "High"
+}
