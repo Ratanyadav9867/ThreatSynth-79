@@ -1,9 +1,9 @@
 {
   "alert_id": "ALT-DEMO-001",
-  "timestamp": "2026-08-22T10:47:15.190827+00:00",
+  "timestamp": "2026-08-22T11:10:22.307468+00:00",
   "alert_name": "Critical SQL Injection Attempt on Core Payment API",
-  "source_ip": "198.51.100.122",
-  "source_country": "RU",
+  "source_ip": "198.51.100.148",
+  "source_country": "KP",
   "is_tor": true,
   "username": "admin",
   "resource": "/api/v1/payments/transfer",
