@@ -1,0 +1,38 @@
+version: 2
+updates:
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "security"
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+
+  # Docker base image
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "security"
+      - "docker"
+    commit-message:
+      prefix: "chore(docker)"
+
+  # GitHub Actions workflow dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "security"
+      - "ci"
+    commit-message:
+      prefix: "chore(ci)"
